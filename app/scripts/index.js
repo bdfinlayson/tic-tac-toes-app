@@ -1,7 +1,7 @@
 'use strict';
 
 var fb = new Firebase('https://tic-tac-toes-app.firebaseio.com'),
-  gameArr = [[,'/images/tack.jpg',]['/images/tick.jpg',,][,,'/images/tack.jpg']];
+  gameArr = [['','/images/tack.jpg',''],['/images/tick.jpg','',''],['','','/images/tack.jpg']];
 
 //login register logout features
 
@@ -37,8 +37,8 @@ $('#registerButton').click(function() {
           }
       });
       $('#loginForm').hide("slow");
-      $('#boardWrapper').toggle();
-      renderBoard();
+      //$('#boardWrapper').toggle();
+      renderBoard(gameArr);
     }
   });
 });
@@ -55,8 +55,8 @@ $('#loginButton').click(function() {
         alert("Login Failed!", error);
       } else {
         $('#loginForm').hide("slow");
-        $('#boardWrapper').toggle();
-        renderBoard()
+        //$('#boardWrapper').toggle();
+        renderBoard(gameArr);
       }
   });
 });
@@ -76,16 +76,17 @@ function sendToFb(data) {
 
 //Create board
 
-function renderBoard(gameArr) {
+function renderBoard(x) {
 
 	var $tbody = $('<tbody></tbody>');
 
-	_gameArr.forEach(function(row) {
+	x.forEach(function(row) {
 		var $tr = $('<tr></tr>');
-	 _row.forEach(function(cell) {
+	 row.forEach(function(cell) {
 		$tr.append($('<td><img src="' + cell + '"></img></td>'));
-  })
+  });
     $tbody.append($tr);
-  })
+  });
+  $('table').append($tbody);
 }
 

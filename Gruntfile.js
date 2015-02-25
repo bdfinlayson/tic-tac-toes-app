@@ -64,6 +64,7 @@ module.exports = function (grunt) {
             return [
               connect.static('public'),
               connect().use('/scripts', connect.static('./app/scripts')),
+              connect().use('/images', connect.static('./app/images')),
               connect().use('/bower_components', connect.static('./bower_components'))
             ];
           }
@@ -118,7 +119,8 @@ module.exports = function (grunt) {
           'public/**/*.html',
           'public/css/**/*.css',
           'public/js/**/*.js',
-          'app/scripts/**/*.js'
+          'app/scripts/**/*.js',
+          'app/images/**/*'
         ]
       },
 
