@@ -1,7 +1,9 @@
 'use strict';
 
-var fb = new Firebase('https://tic-tac-toes-app.firebaseio.com');
+var fb = new Firebase('https://tic-tac-toes-app.firebaseio.com'),
+  gameArr = [[,'/images/tack.jpg',]['/images/tick.jpg',,][,,'/images/tack.jpg']];
 
+//login register logout features
 
 $('#registerButton').click(function() {
   var user     = $('#userEmail').val(),
@@ -36,6 +38,7 @@ $('#registerButton').click(function() {
       });
       $('#loginForm').hide("slow");
       $('#boardWrapper').toggle();
+      renderBoard();
     }
   });
 });
@@ -53,6 +56,7 @@ $('#loginButton').click(function() {
       } else {
         $('#loginForm').hide("slow");
         $('#boardWrapper').toggle();
+        renderBoard()
       }
   });
 });
@@ -68,3 +72,20 @@ $('#logoutButton').click(function() {
 function sendToFb(data) {
   fb.child('players').child(data.auth.uid).set({blah: 12345});
 }
+
+
+//Create board
+
+function renderBoard(gameArr) {
+
+	var $tbody = $('<tbody></tbody>');
+
+	_gameArr.forEach(function(row) {
+		var $tr = $('<tr></tr>');
+	 _row.forEach(function(cell) {
+		$tr.append($('<td><img src="' + cell + '"></img></td>'));
+  })
+    $tbody.append($tr);
+  })
+}
+
