@@ -79,6 +79,11 @@ function sendToFb(data) {
 }
 
 
+function clearGame () {
+  gameArr = [['','',''],['','',''],['','','']];
+  turnCounter =  0;
+  turnChecker = true;
+}
 
 //Create board
 
