@@ -70,7 +70,7 @@ $('#loginButton').click(function() {
 $('#logoutButton').click(function() {
   fb.unauth();
   $('#boardWrapper').empty();
-  alert('Logout successful! Come back soon!')
+  alert('Logout successful! Come back soon!');
   $('#loginForm').show("slow");
 });
 
