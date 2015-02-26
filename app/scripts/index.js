@@ -102,76 +102,43 @@ function renderBoard(x) {
   $('table').append($tbody);
 }
 
-$('table').on('click', 'tbody tr td', function(){
-	var index = $('td').index(this);
-	switch (index) {
-		case 0:
-			if (gameArr[0][0] === '') {
-				gameArr[0][0] = playerMove();
-			} else { alert('Space taken!')}
-			break;
-		case 1:
-		  if (gameArr[0][1] === '') {
-			gameArr[0][1] = playerMove();
-		}	else { alert('Space taken!')}
-			break;
-		case 2:
-		if (gameArr[0][2] === '') {
-		  gameArr[0][2] = playerMove();
-		} else { alert('Space taken!')}
-		  break;
-		case 3:
-		  if (gameArr[1][0] === '') {
-			gameArr[1][0] = playerMove();
-		}	else { alert('Space taken!')}
-			break;
-		case 4:
-		  if (gameArr[1][1] === '') {
-		  gameArr[1][1] = playerMove();
-		} else { alert('Space taken!')}
-		  break;
-		case 5:
-		  if (gameArr[1][2] === '') {
-		  gameArr[1][2] = playerMove();
-		} else { alert('Space taken!')}
-		  break;
-		case 6:
-		  if (gameArr[2][0] === '') {
-		  gameArr[2][0] = playerMove();
-		} else { alert('Space taken!')}
-		  break;
-		case 7:
-		  if (gameArr[2][1] === '') {
-		  gameArr[2][1] = playerMove();
-		} else { alert('Space taken!')}
-		  break;
-		case 8:
-		  if (gameArr[2][2] === '') {
-		  gameArr[2][2] = playerMove();
-		} else { alert('Space taken!')}
-		  break;
-	}
-	renderBoard(gameArr);
+//Click to select move.
+$('#boardWrapper').on('click', 'tbody tr td', function(){
+  var row,
+      col;
+  row = this.parentElement.sectionRowIndex;
+  col  = this.cellIndex;
+  if (gameArr[row][col] === '') {
+    gameArr[row][col] = playerMove();
+    renderBoard(gameArr);
+    gameOverCheck();
+  } else {
+    alert('That space is taken please choose another:)');
+  }
 });
 
+
+//switch between players and increment turn counter.
+function gameOverCheck () {
+  if (!(turnCounter < 9)) {
+    alert('GAME OVER!');
+  }
+}
+
+
 function playerMove(){
-	//should switch between players 1 and 2 and increment turnCounter
-	//if player 1, switch turnChecker to false and increment turnCounter
-	//then return player 1
-	//else switch turnChecker to true and increment turnCounter
-	//then return player 2
-	if (turnChecker === true && turnCounter < 9) {
+	if (turnChecker === true) {
 
 		turnChecker = false;
-		turnCounter++
+		turnCounter++;
 		return player1;
 
-	} else if (turnChecker === false && turnCounter < 9) { 
-      turnChecker = true;
-      turnCounter++;
-      return player2;
 	} else {
-		alert('Game over!');
+
+    turnChecker = true;
+    turnCounter++;
+    return player2;
+
 	}
-};
+}
 
