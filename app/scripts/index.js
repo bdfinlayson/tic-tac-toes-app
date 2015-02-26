@@ -154,7 +154,7 @@ function playerMove(){
 	//then return player 1
 	//else switch turnChecker to true and increment turnCounter
 	//then return player 2
-	if (turnChecker === true && turnCounter < ) {
+	if (turnChecker === true && turnCounter < 9) {
 
 		turnChecker = false;
 		turnCounter++
