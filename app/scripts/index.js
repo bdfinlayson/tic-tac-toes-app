@@ -1,7 +1,11 @@
 'use strict';
 
 var fb = new Firebase('https://tic-tac-toes-app.firebaseio.com'),
-  gameArr = [['','/images/tack.jpg',''],['/images/tick.jpg','',''],['','','/images/tack.jpg']];
+  gameArr = [['','',''],['','',''],['','','']],
+  turnChecker = true,
+  turnCounter = 0,
+  player1 = '/images/tack.jpg',
+  player2 = '/images/tick.jpg';
 
 //login register logout features
 
@@ -79,7 +83,7 @@ function sendToFb(data) {
 //Create board
 
 function renderBoard(x) {
-
+  $('table').empty();
 	var $tbody = $('<tbody></tbody>');
 
 	x.forEach(function(row) {
@@ -93,6 +97,75 @@ function renderBoard(x) {
 }
 
 $('table').on('click', 'tbody tr td', function(){
-	console.log('clicked ', this);
+	var index = $('td').index(this);
+	switch (index) {
+		case 0:
+			if (gameArr[0][0] === '') {
+				gameArr[0][0] = playerMove();
+			} else { alert('Space taken!')}
+			break;
+		case 1:
+		  if (gameArr[0][1] === '') {
+			gameArr[0][1] = playerMove();
+		}	else { alert('Space taken!')}
+			break;
+		case 2:
+		if (gameArr[0][2] === '') {
+		  gameArr[0][2] = playerMove();
+		} else { alert('Space taken!')}
+		  break;
+		case 3:
+		  if (gameArr[1][0] === '') {
+			gameArr[1][0] = playerMove();
+		}	else { alert('Space taken!')}
+			break;
+		case 4:
+		  if (gameArr[1][1] === '') {
+		  gameArr[1][1] = playerMove();
+		} else { alert('Space taken!')}
+		  break;
+		case 5:
+		  if (gameArr[1][2] === '') {
+		  gameArr[1][2] = playerMove();
+		} else { alert('Space taken!')}
+		  break;
+		case 6:
+		  if (gameArr[2][0] === '') {
+		  gameArr[2][0] = playerMove();
+		} else { alert('Space taken!')}
+		  break;
+		case 7:
+		  if (gameArr[2][1] === '') {
+		  gameArr[2][1] = playerMove();
+		} else { alert('Space taken!')}
+		  break;
+		case 8:
+		  if (gameArr[2][2] === '') {
+		  gameArr[2][2] = playerMove();
+		} else { alert('Space taken!')}
+		  break;
+	}
+	renderBoard(gameArr);
 });
+
+function playerMove(){
+	//should switch between players 1 and 2 and increment turnCounter
+	//if player 1, switch turnChecker to false and increment turnCounter
+	//then return player 1
+	//else switch turnChecker to true and increment turnCounter
+	//then return player 2
+	if (turnChecker === true && turnCounter < ) {
+
+		turnChecker = false;
+		turnCounter++
+		return player1;
+
+	} else if (turnChecker === false && turnCounter < 9) { 
+      turnChecker = true;
+      turnCounter++;
+      return player2;
+	} else {
+		alert('Game over!');
+	}
+};
 
