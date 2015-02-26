@@ -155,9 +155,9 @@ function checkForWin (x) {
     case ((x[2][0] !== '') && (x[2][0] === x[2][1]) && (x[2][0] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
-    //------------------------
+    //---------------------
     //Check winning diagonals
-    //------------------------
+    //---------------------
     case ((x[0][0] !== '') && (x[0][0] === x[1][1]) && (x[0][0] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
@@ -185,22 +185,22 @@ function playerTurn () {
 }
 
 
-function sendPlayerStat () {
-	var playerInfo = fb.getAuth(),
-	  playerId = playerInfo.uid,
-	  playerStat = getCurrentStat(playerId)
-	  fbPlayers = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId)
-  if (player1.won === true && playerId === player1.id) {
-  	playerStat++
-	  fbPlayers.child('gamesWon').set(playerStat);
-  } else if (player2.won === true && playerId === player2.id) {
-  	playerStat++
-    fbPlayers.child('gamesWon').set(playerStat);
-  } else {
-  	playerStat--
-  	fbPlayers.child('gamesWon').set(playerStat);
-  }
-}
+//function sendPlayerStat () {
+//	var playerInfo = fb.getAuth(),
+//	  playerId = playerInfo.uid,
+//	  playerStat = getCurrentStat(playerId)
+//	  fbPlayers = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId)
+//  if (player1.won === true && playerId === player1.id) {
+//  	playerStat++
+//	  fbPlayers.child('gamesWon').set(playerStat);
+//  } else if (player2.won === true && playerId === player2.id) {
+//  	playerStat++
+//    fbPlayers.child('gamesWon').set(playerStat);
+//  } else {
+//  	playerStat--
+//  	fbPlayers.child('gamesWon').set(playerStat);
+//  }
+//}
 
 function getCurrentStat (playerData) {
 
