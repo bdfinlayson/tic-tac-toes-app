@@ -155,9 +155,9 @@ function checkForWin (x) {
     case ((x[2][0] !== '') && (x[2][0] === x[2][1]) && (x[2][0] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
-    //---------------------
+    //------------------------
     //Check winning diagonals
-    //---------------------
+    //------------------------
     case ((x[0][0] !== '') && (x[0][0] === x[1][1]) && (x[0][0] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
