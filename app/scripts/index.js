@@ -130,39 +130,38 @@ function gameOverCheck () {
 
 
 function checkForWin (x) {
-  debugger;
   switch(true) {
     //---------------------
     //check winning columns
     //---------------------
-    case (x[0][0] !== '' && (x[0][0] === x[1][0]) === (x[0][0] === x[2][0])):
+    case ((x[0][0] !== '') && (x[0][0] === x[1][0]) && (x[0][0] === x[2][0])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
-    case ((x[0][1] === x[1][1]) === (x[0][1] === x[2][1])):
+    case ((x[0][1] !== '') && (x[0][1] === x[1][1]) && (x[0][1] === x[2][1])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
-    case ((x[0][2] === x[1][2]) === (x[0][2] === x[2][2])):
+    case ((x[0][2] !== '') && (x[0][2] === x[1][2]) && (x[0][2] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
     //---------------------
     //Check winning rows
     //---------------------
-    case ((x[0][0] === x[0][1]) === (x[0][0] === x[0][2])):
+    case ((x[0][0] !== '') && (x[0][0] === x[0][1]) && (x[0][0] === x[0][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
-    case ((x[1][0] === x[1][1]) === (x[1][0] === x[1][2])):
+    case ((x[1][0] !== '') && (x[1][0] === x[1][1]) && (x[1][0] === x[1][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
-    case ((x[2][0] === x[2][1]) === (x[2][0] === x[2][2])):
+    case ((x[2][0] !== '') && (x[2][0] === x[2][1]) && (x[2][0] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
     //---------------------
     //Check winning diagonals
     //---------------------
-    case ((x[0][0] === x[1][1]) === (x[0][0] === x[2][2])):
+    case ((x[0][0] !== '') && (x[0][0] === x[1][1]) && (x[0][0] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
-    case ((x[0][2] === x[1][1]) === (x[0][2] === x[2][0])):
+    case ((x[0][2] !== '') && (x[0][2] === x[1][1]) && (x[0][2] === x[2][0])):
       alert('Player ' + currPlayer + ' Wins!!!');
       break;
     default:
