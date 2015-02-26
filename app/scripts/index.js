@@ -42,6 +42,7 @@ $('#registerButton').click(function() {
       });
       $('#loginForm').hide("slow");
       //$('#boardWrapper').toggle();
+      clearGame();
       renderBoard(gameArr);
     }
   });
@@ -55,13 +56,13 @@ $('#loginButton').click(function() {
     'email': user,
     'password': password
   }, function(error, authData) {
-      if (error) {
-        alert("Login Failed!", error);
-      } else {
-        $('#loginForm').hide("slow");
-        //$('#boardWrapper').toggle();
-        renderBoard(gameArr);
-      }
+    if (error) {
+      alert("Login Failed!", error);
+    } else {
+      $('#loginForm').hide("slow");
+      clearGame();
+      renderBoard(gameArr);
+    }
   });
 });
 
