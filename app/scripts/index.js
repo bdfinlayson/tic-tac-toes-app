@@ -64,6 +64,7 @@ $('#loginButton').click(function() {
 
 $('#logoutButton').click(function() {
   fb.unauth();
+  $('#boardWrapper').empty();
   alert('Logout successful! Come back soon!')
   $('#loginForm').show("slow");
 });
@@ -72,6 +73,7 @@ $('#logoutButton').click(function() {
 function sendToFb(data) {
   fb.child('players').child(data.auth.uid).set({blah: 12345});
 }
+
 
 
 //Create board
@@ -89,4 +91,8 @@ function renderBoard(x) {
   });
   $('table').append($tbody);
 }
+
+$('table').on('click', 'tbody tr td', function(){
+	console.log('clicked ', this);
+});
 
