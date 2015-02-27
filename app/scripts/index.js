@@ -2,10 +2,10 @@
 
 var fb = new Firebase('https://tic-tac-toes-app.firebaseio.com'),
   gameArr = [['','',''],['','',''],['','','']],
-  currPlayer = player1,
+  currPlayer = '',
   turnCounter = 0,
-  player1 = '/images/tack.jpg',
-  player2 = '/images/tick.jpg';
+  player1 = '', // '/images/tack.jpg',
+  player2 = '/images/tick.jpg'; // '/images/tick.jpg';
 //login register logout features
 
 $('#registerButton').click(function() {
@@ -62,6 +62,7 @@ $('#loginButton').click(function() {
       $('#loginForm').hide("slow");
       clearGame();
       renderBoard(gameArr);
+      setPlayerImg();
     }
   });
 });
@@ -196,6 +197,24 @@ function playerTurn () {
 	}
 }
 
+function setPlayerImg() {
+  var playerInfo = fb.getAuth(),
+      playerId = playerInfo.uid,
+      fbPlayer = $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function () {
+        console.log(fbPlayer)
+        console.log(fbPlayer.responseJSON)
+
+      if (fbPlayer.responseJSON.isPlayer1 === true) {
+        currPlayer = '/images/tack.jpg';
+        player1 = '/images/tack.jpg';
+      } else {
+        currPlayer = '/images/tick.jpg';
+        player2 = '/images/tick.jpg';
+      }
+  });
+}
+
+
 function toggleCurrGameWin() {
   var playerInfo = fb.getAuth(),
       playerId = playerInfo.uid,
@@ -225,4 +244,14 @@ function getCurrentStat (playerData) {
   console.log(data);
   return data;
   })
+}
+
+function getPlayerInfo () {
+var playerInfo = fb.getAuth(),
+      playerId = playerInfo.uid,
+      fbPlayer = $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function () {
+        console.log(fbPlayer)
+        console.log(fbPlayer.responseJSON)
+        return fbPlayer;
+      });
 }
