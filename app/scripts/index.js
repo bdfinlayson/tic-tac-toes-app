@@ -5,9 +5,9 @@ var fb = new Firebase('https://tic-tac-toes-app.firebaseio.com'),
   currPlayer = '',
   turnCounter = 0,
   player1 = '', // '/images/tack.jpg',
-  player2 = '/images/tick.jpg'; // '/images/tick.jpg';
+  player2 = '/images/tick.jpg', // '/images/tick.jpg';
   //TODO: add function that toggles isPlayer1 to true or false depending on whether the player is the first or second to join the game
-
+  cellImg;
 //login register logout features
 
 $('#registerButton').click(function() {
@@ -126,6 +126,7 @@ $('#boardWrapper').on('click', 'tbody tr td', function(){
   col  = this.cellIndex;
   if (gameArr[row][col] === '') {
     gameArr[row][col] = currPlayer;
+    cellImg = gameArr[row][col];
     checkForWin(gameArr);
     playerTurn();
     renderBoard(gameArr);
@@ -158,30 +159,37 @@ function checkForWin (x) {
       break;
     case ((x[0][1] !== '') && (x[0][1] === x[1][1]) && (x[0][1] === x[2][1])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameWin();
       break;
     case ((x[0][2] !== '') && (x[0][2] === x[1][2]) && (x[0][2] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameWin();
       break;
     //---------------------
     //Check winning rows
     //---------------------
     case ((x[0][0] !== '') && (x[0][0] === x[0][1]) && (x[0][0] === x[0][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameWin();
       break;
     case ((x[1][0] !== '') && (x[1][0] === x[1][1]) && (x[1][0] === x[1][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameWin();
       break;
     case ((x[2][0] !== '') && (x[2][0] === x[2][1]) && (x[2][0] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameWin();
       break;
     //---------------------
     //Check winning diagonals
     //---------------------
     case ((x[0][0] !== '') && (x[0][0] === x[1][1]) && (x[0][0] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameWin();
       break;
     case ((x[0][2] !== '') && (x[0][2] === x[1][1]) && (x[0][2] === x[2][0])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameWin();
       break;
     default:
       break;
@@ -216,11 +224,20 @@ function setPlayerImg() {
       if (fbPlayer.responseJSON.isPlayer1 === true) {
         currPlayer = '/images/tack.jpg';
         player1 = '/images/tack.jpg';
+        sendImg(player1)
       } else {
         currPlayer = '/images/tick.jpg';
         player2 = '/images/tick.jpg';
+        sendImg(player2)
       }
   });
+}
+
+function sendImg(data) {
+    var playerInfo = fb.getAuth(),
+      playerId = playerInfo.uid,
+      fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
+    fbPlayer.child('img').set(data);
 }
 
 //toggles whether player won the current game to true or false
@@ -229,34 +246,56 @@ function toggleCurrGameWin() {
   var playerInfo = fb.getAuth(),
       playerId = playerInfo.uid,
       fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
+  var playerInfo = fb.getAuth(),
+      playerId = playerInfo.uid;
+      $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function(data){
+      console.log(data);
+ 
+ if (data.img === cellImg) {
+
       fbPlayer.child('wonCurrGame').set(true);
+      sendWinLoss()
+    } else {
+      fbPlayer.child('wonCurrGame').set(false);
+      sendWinLoss()
+    }
+  })
 }
 
 
-//function sendPlayerStat () {
-//	var playerInfo = fb.getAuth(),
-//	  playerId = playerInfo.uid,
-//	  playerStat = getCurrentStat(playerId),
-//    playerWins = playerStat.wins,
-//	  fbPlayers = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId)
-//  if (playerStat.wonCurrGame === true && playerId === player1.id) {
-//  	playerWins++
-//	  fbPlayers.child('wins').update(playerWins);
-//  } else {
-//  	playerWins--
-//  	fbPlayers.child('wins').update(playerWins);
-//  }
-//}
+//updates the player's number of wins and losses
+
+function sendWinLoss () {
+	var playerInfo = fb.getAuth(),
+	    playerId = playerInfo.uid;
+	    $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function(data){
+      console.log(data);
+ 
+  var playerWins = data.wins,
+      playerLosses = data.losses,
+      fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
+ if (data.img === cellImg) {
+  console.log(playerWins)
+ 	playerWins++
+  console.log(playerWins)
+	  fbPlayer.child('wins').set(playerWins);
+ } else {
+  console.log(playerLosses)
+ 	playerLosses++
+  console.log(playerLosses)
+ 	fbPlayer.child('losses').set(playerLosses);
+ }
+})
+}
 
 //gets current player stats
 
-function getCurrentStat (playerData) {
+// function getCurrentStat (data) {
 
-	var data = $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerData + '.json', function(data){
-  console.log(data);
-  return data;
-  })
-}
+// 	$.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + data + '.json', function(data){
+//   return data;
+//   })
+// }
 
 //modular function to get player data
 
