@@ -64,8 +64,9 @@ $('#loginButton').click(function() {
     } else {
       $('#loginForm').hide("slow");
       clearGame();
-      setPlayerImg();
       createNewGameObj(user);
+      setPlayerCurrGame();
+      setPlayerImg();
       renderBoard(gameArr);
     }
   });
@@ -90,7 +91,7 @@ function sendToFb(data) {
     userName: data.uid,
     wins: 0,
     losses: 0,
-    gamesPlayed: [''],
+    gamesPlayed: 1,
     opponentsPlayed: [''],
     isPlayer1: true,
     accountExpiration: data.expires,
@@ -278,6 +279,22 @@ function sendImg(data) {
       playerId = playerInfo.uid,
       fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
     fbPlayer.child('img').set(data);
+}
+
+
+//sets player's current game and games played in firebase
+
+function setPlayerCurrGame() {
+   var playerInfo = fb.getAuth(),
+      playerId = playerInfo.uid,
+      fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
+      $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function(data){
+
+    fbPlayer.update({
+      currGame: currGameId,
+      gamesPlayed: data.gamesPlayed+1
+    });
+  });
 }
 
 //toggles whether player won the current game to true or false
