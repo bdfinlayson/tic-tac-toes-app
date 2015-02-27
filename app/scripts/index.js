@@ -83,6 +83,7 @@ $('#logoutButton').click(function() {
 
 
 function sendToFb(data) {
+  console.log(data)
   fb.child('players').child(data.uid).set({
     userName: data.uid,
     wins: 0,
@@ -92,7 +93,8 @@ function sendToFb(data) {
     isPlayer1: true,
     accountExpiration: data.expires,
     wonCurrGame: false,
-    currGame: ''
+    currGame: '',
+    email: data.password.email
   });
 }
 
