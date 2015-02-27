@@ -196,14 +196,17 @@ function checkForWin (x) {
     //---------------------
     case ((x[0][0] !== '') && (x[0][0] === x[1][0]) && (x[0][0] === x[2][0])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameStats();
       toggleCurrGameWin();
       break;
     case ((x[0][1] !== '') && (x[0][1] === x[1][1]) && (x[0][1] === x[2][1])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameStats();
       toggleCurrGameWin();
       break;
     case ((x[0][2] !== '') && (x[0][2] === x[1][2]) && (x[0][2] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameStats();
       toggleCurrGameWin();
       break;
     //---------------------
@@ -211,14 +214,17 @@ function checkForWin (x) {
     //---------------------
     case ((x[0][0] !== '') && (x[0][0] === x[0][1]) && (x[0][0] === x[0][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameStats();
       toggleCurrGameWin();
       break;
     case ((x[1][0] !== '') && (x[1][0] === x[1][1]) && (x[1][0] === x[1][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameStats();
       toggleCurrGameWin();
       break;
     case ((x[2][0] !== '') && (x[2][0] === x[2][1]) && (x[2][0] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameStats();
       toggleCurrGameWin();
       break;
     //---------------------
@@ -226,10 +232,12 @@ function checkForWin (x) {
     //---------------------
     case ((x[0][0] !== '') && (x[0][0] === x[1][1]) && (x[0][0] === x[2][2])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameStats();
       toggleCurrGameWin();
       break;
     case ((x[0][2] !== '') && (x[0][2] === x[1][1]) && (x[0][2] === x[2][0])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameStats();
       toggleCurrGameWin();
       break;
     default:
@@ -252,6 +260,24 @@ function playerTurn () {
 
 	}
 }
+
+//toggle stats for game on win event include game active winner and loser
+
+function toggleCurrGameStats() {
+
+  var playerInfo = fb.getAuth(),
+      playerId = playerInfo.uid,
+      fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
+  var playerInfo = fb.getAuth(),
+      playerId = playerInfo.uid,
+      fbGame = new Firebase('https://tic-tac-toes-app.firebaseio.com/games/' + currGameId);
+ 
+     fbGame.update({ 
+      isActive: false,
+      winner: playerId
+    });
+}
+
 
 //sets the current player's image based on whether isPlayer1 is true or false
 
