@@ -64,6 +64,7 @@ $('#loginButton').click(function() {
       $('#loginForm').hide("slow");
       clearGame();
       setPlayerImg();
+      createNewGameObj(user);
       renderBoard(gameArr);
     }
   });
@@ -103,6 +104,28 @@ function clearGame () {
   gameArr = [['','',''],['','',''],['','','']];
   turnCounter =  0;
   currPlayer = player1;
+}
+
+//Create new game object in firebase on player login
+
+function createNewGameObj(data) {
+//generate random game number
+  var num = Math.random(),
+      num2 = num * 10000,
+      gameNum = Math.floor(num2);
+
+//create and send new game object
+   var fbGame = new Firebase('https://tic-tac-toes-app.firebaseio.com/games/' + gameNum);
+      fbGame.set({
+      boardState: [['','',''],['','',''],['','','']],
+      winner: '',
+      loser: '',
+      player1: data,
+      player2: '',
+      gameId: gameNum,
+      isActive: true
+  });
+
 }
 
 //Create board
