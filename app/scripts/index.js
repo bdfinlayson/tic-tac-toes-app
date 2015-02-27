@@ -7,7 +7,8 @@ var fb = new Firebase('https://tic-tac-toes-app.firebaseio.com'),
   player1 = '', // '/images/tack.jpg',
   player2 = '/images/tick.jpg', // '/images/tick.jpg';
   //TODO: add function that toggles isPlayer1 to true or false depending on whether the player is the first or second to join the game
-  cellImg;
+  cellImg,
+  currGameId;
 //login register logout features
 
 $('#registerButton').click(function() {
@@ -113,6 +114,7 @@ function createNewGameObj(data) {
   var num = Math.random(),
       num2 = num * 10000,
       gameNum = Math.floor(num2);
+      currGameId = gameNum;
 
 //create and send new game object
    var fbGame = new Firebase('https://tic-tac-toes-app.firebaseio.com/games/' + gameNum);
@@ -154,6 +156,7 @@ $('#boardWrapper').on('click', 'tbody tr td', function(){
   if (gameArr[row][col] === '') {
     gameArr[row][col] = currPlayer;
     cellImg = gameArr[row][col];
+    sendBoardState();
     checkForWin(gameArr);
     playerTurn();
     renderBoard(gameArr);
@@ -162,6 +165,16 @@ $('#boardWrapper').on('click', 'tbody tr td', function(){
     alert('That space is taken please choose another:)');
   }
 });
+
+//update firebase board state
+
+function sendBoardState() {
+
+  var fbGame = new Firebase('https://tic-tac-toes-app.firebaseio.com/games/' + currGameId);
+  fbGame.update({
+      boardState: gameArr
+  })
+}
 
 
 //switch between players and increment turn counter.
