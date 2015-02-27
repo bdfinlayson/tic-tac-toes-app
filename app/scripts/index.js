@@ -63,8 +63,8 @@ $('#loginButton').click(function() {
     } else {
       $('#loginForm').hide("slow");
       clearGame();
-      renderBoard(gameArr);
       setPlayerImg();
+      renderBoard(gameArr);
     }
   });
 });
@@ -122,7 +122,9 @@ function renderBoard(x) {
 }
 var row,
     col;
-//Click to select move.
+
+//Click to select move
+
 $('#boardWrapper').on('click', 'tbody tr td', function(){
   row = this.parentElement.sectionRowIndex;
   col  = this.cellIndex;
