@@ -97,7 +97,8 @@ function sendToFb(data) {
     accountExpiration: data.expires,
     wonCurrGame: false,
     currGame: '',
-    email: data.password.email
+    email: data.password.email,
+    isTurn: true
   });
 }
 
@@ -126,7 +127,8 @@ function createNewGameObj(data) {
       player1: data,
       player2: '',
       gameId: gameNum,
-      isActive: true
+      isActive: true,
+      player1Turn: true
   });
 
 }
@@ -182,11 +184,41 @@ function sendBoardState() {
 function gameOverCheck () {
   if (turnCounter < 9) {
     turnCounter++
+    // toggleTurn();
   }
   else {
     alert('GAME OVER!');
   }
 }
+
+
+
+//   //function to toggle player turn to true or false
+//   //also toggles whose turn it currently is in the game object
+
+// function toggleTurn(turnCounter) {
+//   console.log(turnCounter)
+//   var playerInfo = fb.getAuth(),
+//       playerId = playerInfo.uid,
+//       fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
+//   var playerInfo = fb.getAuth(),
+//       playerId = playerInfo.uid,
+//       fbGame = new Firebase('https://tic-tac-toes-app.firebaseio.com/games/' + currGameId);
+ 
+//  if (turnCounter % 2 === 1)
+//       fbPlayer.update({ 
+//       isTurn: true,
+//       winner: playerId
+//     });
+
+
+ 
+//      fbGame.update({ 
+//       player1Turn: ,
+//       winner: playerId
+//     });
+// }
+
 
 
 function checkForWin (x) {
