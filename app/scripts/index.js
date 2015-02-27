@@ -6,6 +6,8 @@ var fb = new Firebase('https://tic-tac-toes-app.firebaseio.com'),
   turnCounter = 0,
   player1 = '', // '/images/tack.jpg',
   player2 = '/images/tick.jpg'; // '/images/tick.jpg';
+  //TODO: add function that toggles isPlayer1 to true or false depending on whether the player is the first or second to join the game
+
 //login register logout features
 
 $('#registerButton').click(function() {
@@ -69,6 +71,10 @@ $('#loginButton').click(function() {
 
 
 $('#logoutButton').click(function() {
+  var playerInfo = fb.getAuth(),
+    playerId = playerInfo.uid,
+    fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
+    fbPlayer.child('wonCurrGame').set(false);
   fb.unauth();
   $('#boardWrapper').empty();
   alert('Logout successful! Come back soon!');
@@ -182,6 +188,7 @@ function checkForWin (x) {
   }
 }
 
+//alternates between player turns
 
 function playerTurn () {
 	if (currPlayer === player1) {
@@ -196,6 +203,8 @@ function playerTurn () {
 
 	}
 }
+
+//sets the current player's image based on whether isPlayer1 is true or false
 
 function setPlayerImg() {
   var playerInfo = fb.getAuth(),
@@ -214,6 +223,7 @@ function setPlayerImg() {
   });
 }
 
+//toggles whether player won the current game to true or false
 
 function toggleCurrGameWin() {
   var playerInfo = fb.getAuth(),
@@ -238,6 +248,8 @@ function toggleCurrGameWin() {
 //  }
 //}
 
+//gets current player stats
+
 function getCurrentStat (playerData) {
 
 	var data = $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerData + '.json', function(data){
@@ -246,12 +258,15 @@ function getCurrentStat (playerData) {
   })
 }
 
-function getPlayerInfo () {
-var playerInfo = fb.getAuth(),
-      playerId = playerInfo.uid,
-      fbPlayer = $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function () {
-        console.log(fbPlayer)
-        console.log(fbPlayer.responseJSON)
-        return fbPlayer;
-      });
-}
+//modular function to get player data
+
+// function getPlayerInfo () {
+// var playerInfo = fb.getAuth(),
+//       playerId = playerInfo.uid,
+//       fbPlayer = $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function (cb) {
+//         console.log(fbPlayer)
+//         console.log(fbPlayer.responseJSON)
+//         return fbPlayer;
+//       })
+//       return fbPlayer;
+// }
