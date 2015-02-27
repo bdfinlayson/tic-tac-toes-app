@@ -1,14 +1,19 @@
 'use strict';
 
 var fb = new Firebase('https://tic-tac-toes-app.firebaseio.com'),
+  fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId),
+  fbGame = new Firebase('https://tic-tac-toes-app.firebaseio.com/games/' + currGameId),
   gameArr = [['','',''],['','',''],['','','']],
   currPlayer = '',
   turnCounter = 0,
   player1 = '', // '/images/tack.jpg',
   player2 = '/images/tick.jpg', // '/images/tick.jpg';
   //TODO: add function that toggles isPlayer1 to true or false depending on whether the player is the first or second to join the game
-  cellImg,
+  playerId,
+  row,
+  col,
   currGameId;
+
 //login register logout features
 
 $('#registerButton').click(function() {
@@ -21,10 +26,10 @@ $('#registerButton').click(function() {
   }, function(error, userData) {
     if (error) {
     switch (error.code) {
-      case "EMAIL_TAKEN":
+      case 'EMAIL_TAKEN':
         alert('This email is already in use.');
         break;
-      case "INVALID_EMAIL":
+      case 'INVALID_EMAIL':
         alert('The specified email is not valid.');
         break;
       default:
@@ -36,14 +41,15 @@ $('#registerButton').click(function() {
         'password': password
       }, function(error, authData) {
           if (error) {
-            alert("Login Failed!", error);
+            alert('Login Failed!', error);
           } else {
-            $('#loginForm').hide("slow");
+            $('#loginForm').hide('slow');
             console.log(authData);
             sendToFb(authData);
           }
       });
-      $('#loginForm').hide("slow");
+      $('#loginForm').hide('slow');
+      playerId = fb.getAuth().uid,
       //$('#boardWrapper').toggle();
       clearGame();
       renderBoard(gameArr);
@@ -60,9 +66,10 @@ $('#loginButton').click(function() {
     'password': password
   }, function(error, authData) {
     if (error) {
-      alert("Login Failed!", error);
+      alert('Login Failed!', error);
     } else {
-      $('#loginForm').hide("slow");
+      $('#loginForm').hide('slow');
+      playerId = fb.getAuth().uid,
       clearGame();
       createNewGameObj(user);
       setPlayerCurrGame();
@@ -74,19 +81,15 @@ $('#loginButton').click(function() {
 
 
 $('#logoutButton').click(function() {
-  var playerInfo = fb.getAuth(),
-    playerId = playerInfo.uid,
-    fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
-    fbPlayer.child('wonCurrGame').set(false);
+  fbPlayer.child('wonCurrGame').set(false);
   fb.unauth();
   $('#boardWrapper').empty();
   alert('Logout successful! Come back soon!');
-  $('#loginForm').show("slow");
+  $('#loginForm').show('slow');
 });
 
 
 function sendToFb(data) {
-  console.log(data)
   fb.child('players').child(data.uid).set({
     userName: data.uid,
     wins: 0,
@@ -103,32 +106,30 @@ function sendToFb(data) {
 
 
 function clearGame () {
-  gameArr = [['','',''],['','',''],['','','']];
+  gameArr     = [['','',''],['','',''],['','','']];
   turnCounter =  0;
-  currPlayer = player1;
+  currPlayer  = player1;
 }
 
 //Create new game object in firebase on player login
 
 function createNewGameObj(data) {
 //generate random game number
-  var num = Math.random(),
-      num2 = num * 10000,
-      gameNum = Math.floor(num2);
+  var num        = Math.random(),
+      num2       = num * 10000,
+      gameNum    = Math.floor(num2);
       currGameId = gameNum;
 
 //create and send new game object
-   var fbGame = new Firebase('https://tic-tac-toes-app.firebaseio.com/games/' + gameNum);
-      fbGame.set({
-      boardState: [['','',''],['','',''],['','','']],
-      winner: '',
-      loser: '',
-      player1: data,
-      player2: '',
-      gameId: gameNum,
-      isActive: true
+  fbGame.set({
+    boardState: [['','',''],['','',''],['','','']],
+    winner: '',
+    loser: '',
+    player1: data,
+    player2: '',
+    gameId: gameNum,
+    isActive: true
   });
-
 }
 
 //Create board
@@ -140,14 +141,13 @@ function renderBoard(x) {
 	x.forEach(function(row) {
 		var $tr = $('<tr></tr>');
 	 row.forEach(function(cell) {
-		$tr.append($('<td><img src="' + cell + '"></img></td>'));
+		$tr.append($('<td><img src=' + cell + '></img></td>'));
   });
     $tbody.append($tr);
   });
   $('table').append($tbody);
 }
-var row,
-    col;
+
 
 //Click to select move
 
@@ -156,7 +156,6 @@ $('#boardWrapper').on('click', 'tbody tr td', function(){
   col  = this.cellIndex;
   if (gameArr[row][col] === '') {
     gameArr[row][col] = currPlayer;
-    cellImg = gameArr[row][col];
     sendBoardState();
     checkForWin(gameArr);
     playerTurn();
@@ -171,20 +170,19 @@ $('#boardWrapper').on('click', 'tbody tr td', function(){
 
 function sendBoardState() {
 
-  var fbGame = new Firebase('https://tic-tac-toes-app.firebaseio.com/games/' + currGameId);
   fbGame.update({
       boardState: gameArr
-  })
+  });
 }
 
 
-//switch between players and increment turn counter.
+//Increment turn counter.
 function gameOverCheck () {
-  if (turnCounter < 9) {
-    turnCounter++
+  if (turnCounter < 8) {
+    turnCounter++;
   }
   else {
-    alert('GAME OVER!');
+    alert('SORRY GUY\'S THIS IS A CAT\'S GAME OVER!');
   }
 }
 
@@ -264,61 +262,49 @@ function playerTurn () {
 //toggle stats for game on win event include game active winner and loser
 
 function toggleCurrGameStats() {
-
-  var playerInfo = fb.getAuth(),
-      playerId = playerInfo.uid,
-      fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
-  var playerInfo = fb.getAuth(),
-      playerId = playerInfo.uid,
-      fbGame = new Firebase('https://tic-tac-toes-app.firebaseio.com/games/' + currGameId);
- 
-     fbGame.update({ 
-      isActive: false,
-      winner: playerId
-    });
+  fbGame.update({
+    isActive: false,
+    winner: playerId
+  });
 }
 
 
 //sets the current player's image based on whether isPlayer1 is true or false
 
 function setPlayerImg() {
-  var playerInfo = fb.getAuth(),
-      playerId = playerInfo.uid,
-      fbPlayer = $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function () {
-        console.log(fbPlayer)
-        console.log(fbPlayer.responseJSON)
+  //----------------------------------------------
+  //??? Why use $.getJson if we have the fbPlayer ???
+  //----------------------------------------------
 
-      if (fbPlayer.responseJSON.isPlayer1 === true) {
-        currPlayer = '/images/tack.jpg';
-        player1 = '/images/tack.jpg';
-        sendImg(player1)
-      } else {
-        currPlayer = '/images/tick.jpg';
-        player2 = '/images/tick.jpg';
-        sendImg(player2)
-      }
+  var fbPlayer = $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function () {
+
+    if (fbPlayer.responseJSON.isPlayer1 === true) {
+      currPlayer = '/images/tack.jpg';
+      player1 = '/images/tack.jpg';
+      sendImg(player1);
+    } else {
+      currPlayer = '/images/tick.jpg';
+      player2 = '/images/tick.jpg';
+      sendImg(player2);
+    }
   });
 }
 
 function sendImg(data) {
-    var playerInfo = fb.getAuth(),
-      playerId = playerInfo.uid,
-      fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
-    fbPlayer.child('img').set(data);
+  fbPlayer.child('img').set(data);
 }
 
 
 //sets player's current game and games played in firebase
 
 function setPlayerCurrGame() {
-   var playerInfo = fb.getAuth(),
-      playerId = playerInfo.uid,
-      fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
-      $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function(data){
-
+  //----------------------------------------------
+  //??? Why use $.getJson if we have the fbPlayer ???
+  //----------------------------------------------
+  $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function(data){
     fbPlayer.update({
       currGame: currGameId,
-      gamesPlayed: data.gamesPlayed+1
+      gamesPlayed: data.gamesPlayed + 1
     });
   });
 }
@@ -326,69 +312,30 @@ function setPlayerCurrGame() {
 //toggles whether player won the current game to true or false
 
 function toggleCurrGameWin() {
-  var playerInfo = fb.getAuth(),
-      playerId = playerInfo.uid,
-      fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
-  var playerInfo = fb.getAuth(),
-      playerId = playerInfo.uid;
-      $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function(data){
-      console.log(data);
- 
- if (data.img === cellImg) {
-
+  $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function(data){
+    if (data.img === gameArr[row][col]) {
       fbPlayer.child('wonCurrGame').set(true);
-      sendWinLoss()
+      sendWinLoss();
     } else {
       fbPlayer.child('wonCurrGame').set(false);
-      sendWinLoss()
+      sendWinLoss();
     }
-  })
+  });
 }
 
 
 //updates the player's number of wins and losses
 
 function sendWinLoss () {
-	var playerInfo = fb.getAuth(),
-	    playerId = playerInfo.uid;
-	    $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function(data){
-      console.log(data);
- 
-  var playerWins = data.wins,
-      playerLosses = data.losses,
-      fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
- if (data.img === cellImg) {
-  console.log(playerWins)
- 	playerWins++
-  console.log(playerWins)
-	  fbPlayer.child('wins').set(playerWins);
- } else {
-  console.log(playerLosses)
- 	playerLosses++
-  console.log(playerLosses)
- 	fbPlayer.child('losses').set(playerLosses);
- }
-})
+  $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function(data){
+    var playerWins = data.wins,
+        playerLosses = data.losses;
+    if (data.img === gameArr[row][col]) {
+     	playerWins++;
+  	  fbPlayer.child('wins').set(playerWins);
+    } else {
+     	playerLosses++;
+     	fbPlayer.child('losses').set(playerLosses);
+    }
+  });
 }
-
-//gets current player stats
-
-// function getCurrentStat (data) {
-
-// 	$.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + data + '.json', function(data){
-//   return data;
-//   })
-// }
-
-//modular function to get player data
-
-// function getPlayerInfo () {
-// var playerInfo = fb.getAuth(),
-//       playerId = playerInfo.uid,
-//       fbPlayer = $.getJSON('https://tic-tac-toes-app.firebaseio.com/players/' + playerId + '.json', function (cb) {
-//         console.log(fbPlayer)
-//         console.log(fbPlayer.responseJSON)
-//         return fbPlayer;
-//       })
-//       return fbPlayer;
-// }
