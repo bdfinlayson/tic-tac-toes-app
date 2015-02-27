@@ -36,6 +36,7 @@ $('#registerButton').click(function() {
             alert("Login Failed!", error);
           } else {
             $('#loginForm').hide("slow");
+            console.log(authData);
             sendToFb(authData);
           }
       });
@@ -75,7 +76,17 @@ $('#logoutButton').click(function() {
 
 
 function sendToFb(data) {
-  fb.child('players').child(data.auth.uid).set({blah: 12345});
+  fb.child('players').child(data.uid).set({
+    userName: data.uid,
+    wins: 0,
+    losses: 0,
+    gamesPlayed: [''],
+    opponentsPlayed: [''],
+    isPlayer1: true,
+    accountExpiration: data.expires,
+    wonCurrGame: false,
+    currGame: ''
+  });
 }
 
 
@@ -136,6 +147,7 @@ function checkForWin (x) {
     //---------------------
     case ((x[0][0] !== '') && (x[0][0] === x[1][0]) && (x[0][0] === x[2][0])):
       alert('Player ' + currPlayer + ' Wins!!!');
+      toggleCurrGameWin();
       break;
     case ((x[0][1] !== '') && (x[0][1] === x[1][1]) && (x[0][1] === x[2][1])):
       alert('Player ' + currPlayer + ' Wins!!!');
@@ -184,21 +196,26 @@ function playerTurn () {
 	}
 }
 
+function toggleCurrGameWin() {
+  var playerInfo = fb.getAuth(),
+      playerId = playerInfo.uid,
+      fbPlayer = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId);
+      fbPlayer.child('wonCurrGame').set(true);
+}
+
 
 //function sendPlayerStat () {
 //	var playerInfo = fb.getAuth(),
 //	  playerId = playerInfo.uid,
-//	  playerStat = getCurrentStat(playerId)
+//	  playerStat = getCurrentStat(playerId),
+//    playerWins = playerStat.wins,
 //	  fbPlayers = new Firebase('https://tic-tac-toes-app.firebaseio.com/players/' + playerId)
-//  if (player1.won === true && playerId === player1.id) {
-//  	playerStat++
-//	  fbPlayers.child('gamesWon').set(playerStat);
-//  } else if (player2.won === true && playerId === player2.id) {
-//  	playerStat++
-//    fbPlayers.child('gamesWon').set(playerStat);
+//  if (playerStat.wonCurrGame === true && playerId === player1.id) {
+//  	playerWins++
+//	  fbPlayers.child('wins').update(playerWins);
 //  } else {
-//  	playerStat--
-//  	fbPlayers.child('gamesWon').set(playerStat);
+//  	playerWins--
+//  	fbPlayers.child('wins').update(playerWins);
 //  }
 //}
 
